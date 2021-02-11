@@ -1,9 +1,10 @@
 [CmdletBinding()]
-Param([string]$BLGFileName="ExchangeDiagnosticsDailyPerformanceLog_02071407.blg",
+Param([string]$BLGFileName,
       [string]$CounterFilter1,
       [string]$CounterFilter2="I/O Database Reads (Attached) Average Latency",
       [string]$CounterFilter3
       )
+
 
 $OutputFile = "$($env:USERPROFILE)\Documents\CountersSummary_$(Get-Date -Format yyyMMdd_hhmmss).csv"
 
@@ -28,9 +29,13 @@ Write-Host "Counter Filter 1  :     $CounterFilter1" -ForegroundColor Magenta
 Write-Host "Counter Filter 2  :     $CounterFilter2" -ForegroundColor Magenta
 Write-Host "Counter Filter 3  :     $CounterFilter3" -ForegroundColor Magenta
 
+#Verifying if BLG file(s) exist 
+$ExchangeBLGDiagnosticsFilesPath = "$($env:exchangeinstallpath)\Logging\Diagnostics\DailyPerformanceLogs\$BLGFileName"
+If (!(Test-Path $ExchangeBLGDiagnosticsFilesPath)){Write-Host "File(s) $ExchangeBLGDiagnosticsFilesPath not found. Please specify valid BLG file" -ForegroundColor Red;exit;$StopWatch.Stop();$StopWatch.Elapsed.totalseconds | Out-Host}
+
 #Loading all counters present in the target BLG:
 Write-Host "Getting counters list from BLG file, please wait..." -ForegroundColor DarkRed
-$counterList = @(Import-Counter -path "$($env:exchangeinstallpath)\Logging\Diagnostics\DailyPerformanceLogs\$BLGFileName" -ListSet * | Foreach-Object {If ($_.CounterSetType -eq "SingleInstance"){$_.Paths} Else {$_.PathsWithInstances}})
+$counterList = @(Import-Counter -path "$ExchangeBLGDiagnosticsFilesPath" -ListSet * | Foreach-Object {If ($_.CounterSetType -eq "SingleInstance"){$_.Paths} Else {$_.PathsWithInstances}})
 
 $Tick = $StopWatch.Elapsed.totalseconds
 Write-host "Took $Tick seconds to load all counters from $BLGFileName"
@@ -54,7 +59,7 @@ Else {
 
 #To import counters from all the BLGs in the DailyPerformanceLogs:
 #To import counters from only one BLG file in the DailyPerformanceLogs:
-$Data = Import-Counter -Path "$($env:exchangeinstallpath)\Logging\Diagnostics\DailyPerformanceLogs\$BLGFileName" -Counter $CounterListFiltered
+$Data = Import-Counter -Path "$ExchangeBLGDiagnosticsFilesPath" -Counter $CounterListFiltered
 
 $AllResults = @()
 $Data | Select -ExpandProperty CounterSamples | Group-Object Path | Foreach {   $Stats = $_ | Select -ExpandProperty Group | Measure-Object -Average -Minimum -Maximum CookedValue
