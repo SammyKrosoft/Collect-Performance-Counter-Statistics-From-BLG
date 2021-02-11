@@ -31,8 +31,8 @@ Here we specified the ```-BLGFileName``` as ```*.blg``` as well as the ```-Excha
 Sample output:
 ```output
 "Counter","Samples","Minimum","Average","Maximum"
-"\\e2016-02\memory\available mbytes","384","909.041666666667","0","1366"
-"\\e2016-01\memory\available mbytes","384","419.817708333333","0","582"
+"\\e2016-02\memory\available mbytes","384","0","909.041666666667","1366"
+"\\e2016-01\memory\available mbytes","384","0","419.817708333333","582"
 ```
 
 That you can import to Excel or even using Import-CSV:
@@ -42,10 +42,10 @@ Import-CSV .\CountersSummary_20210211_053711.csv | ft
 
 And you will have a nicer view on Powershell and you can work with counters to get specific values and compare to thresholds:
 ```output
-Counter                            Samples Minimum          Average Maximum
--------                            ------- -------          ------- -------
-\\e2016-02\memory\available mbytes 384     909.041666666667 0       1366
-\\e2016-01\memory\available mbytes 384     419.817708333333 0       582
+Counter                            Samples Minimum Average          Maximum
+-------                            ------- ------- -------          -------
+\\e2016-02\memory\available mbytes 384     0       909.041666666667 1366
+\\e2016-01\memory\available mbytes 384     0       419.817708333333 582
 ```
 
 ## Links
