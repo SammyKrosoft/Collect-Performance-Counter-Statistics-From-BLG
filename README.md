@@ -24,7 +24,7 @@ Since the ```-BLGFileName``` is not specified, but the ```-ExchangeBLGDiagnostic
 
 Sample usage 2:
 ```powershell
-.\AnalyzeCounters.ps1 -CounterFilter1 "Memory" -CounterFilter2 "Available" -ExchangeBLGDiagnosticsFolder "C:\temp" -BLGFileName *.blg
+.\Collect-SummarizedPerfmonCounterStats.ps1 -CounterFilter1 "Memory" -CounterFilter2 "Available" -ExchangeBLGDiagnosticsFolder "C:\temp" -BLGFileName *.blg
 ```
 Here we specified the ```-BLGFileName``` as ```*.blg``` as well as the ```-ExchangeBLGDiagnosticsFolder``` specified as ```"C:\temp"``` and this will get all the counters (```*.blg```) that have *"Memory"* and *"Available"* in their names, and that we copied on the ```c:\temp``` directory prior to running the script.
 
