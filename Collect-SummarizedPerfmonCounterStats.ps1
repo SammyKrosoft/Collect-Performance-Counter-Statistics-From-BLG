@@ -75,8 +75,8 @@ $Data | Select -ExpandProperty CounterSamples | Group-Object Path | Foreach {   
                                                                                 $AllResults += [PSCustomObject]@{
                                                                                                                     
                                                                                                                     Counter=$_.Name
-                                                                                                                    Average=$Stats.Minimum
-                                                                                                                    Minimum=$Stats.Average
+                                                                                                                    Minimum=$Stats.Minimum
+                                                                                                                    Average=$Stats.Average
                                                                                                                     Maximum=$Stats.Maximum
                                                                                                                     Samples=$Stats.Count
                                                                                                                     }                                                                                        
