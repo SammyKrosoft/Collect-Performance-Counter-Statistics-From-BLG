@@ -68,7 +68,7 @@ Else {
 
 #To import counters from all the BLGs in the DailyPerformanceLogs:
 #To import counters from only one BLG file in the DailyPerformanceLogs:
-$Data = Import-Counter -Path "$ExchangeBLGDiagnosticsFilesPath" -Counter $CounterListFiltered
+$Data = Import-Counter -Path "$ExchangeBLGDiagnosticsFilesPath" -Counter $CounterListFiltered -ErrorAction SilentlyContinue
 
 $AllResults = @()
 $Data | Select -ExpandProperty CounterSamples | Group-Object Path | Foreach {   $Stats = $_ | Select -ExpandProperty Group | Measure-Object -Average -Minimum -Maximum CookedValue
