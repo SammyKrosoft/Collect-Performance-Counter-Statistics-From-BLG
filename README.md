@@ -37,7 +37,7 @@ Sample output:
 
 That you can import to Excel or even using Import-CSV:
 ```powershell
-Import-CSV .\
+Import-CSV .\CountersSummary_20210211_053711.csv | ft
 ```
 
 And you will have a nicer view on Powershell and you can work with counters to get specific values and compare to thresholds:
