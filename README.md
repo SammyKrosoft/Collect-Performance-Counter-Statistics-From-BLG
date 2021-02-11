@@ -1,6 +1,39 @@
 # Collect-Performance-Counter-Statistics-From-BLG
+
+Sample usage 1:
+```powershell
+Collect-SummarizedPerfmonCounterStats.ps1 -CounterFilter1 "Memory" -CounterFilter2 "Available" -ExchangeBLGDiagnosticsFolder "c:\temp"
+```
+This will get the oldest BLG file on the C:\temp folder to collect the statistics of the counters that have "Memory" and "Available" in their names, which I already know we have only \Memory\Available MBytes falling into this filter, hehe.
+
+Sample usage 2:
+```powershell
+.\AnalyzeCounters.ps1 -CounterFilter1 "Memory" -CounterFilter2 "Available" -ExchangeBLGDiagnosticsFolder "C:\temp" -BLGFileName *.blg
+```
+This will get all the counters (```*.blg```) that have "Memory" and "Available" in their names, and that we copied on the ```c:\temp``` directory
+
+Sample output:
+```output
+"Counter","Samples","Minimum","Average","Maximum"
+"\\e2016-02\memory\available mbytes","384","909.041666666667","0","1366"
+"\\e2016-01\memory\available mbytes","384","419.817708333333","0","582"
+```
+
+That you can import to Excel or even using Import-CSV:
+```powershell
+Import-CSV .\
+```
+And you will have a nicer view on Powershell and you can work with counters to get specific values and compare to thresholds:
+```output
+Counter                            Samples Minimum          Average Maximum
+-------                            ------- -------          ------- -------
+\\e2016-02\memory\available mbytes 384     909.041666666667 0       1366
+\\e2016-01\memory\available mbytes 384     419.817708333333 0       582
+```
+
+
 This script gets the counters list from a BLG you specify.
-If not specified, it will look for an Exchange DailyDiagnostics folder :
+If ```-BLGFileName``` is not specified, it will look for an Exchange DailyPerformanceDiagnostics folder :
 
 ```powershell
 $($env:exchangeinstallpath)Logging\Diagnostics\DailyPerformanceLogs\
