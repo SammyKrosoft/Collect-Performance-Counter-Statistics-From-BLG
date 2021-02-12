@@ -17,7 +17,7 @@ The output is a CSV file containing the counter full path, the number of samples
 
 ## Examples
 
-###Sample usage 1:
+### Sample usage 1:
 
 ```powershell
 Collect-SummarizedPerfmonCounterStats.ps1 -CounterFilter1 "Memory" -CounterFilter2 "Available" -ExchangeBLGDiagnosticsFolder "c:\temp"
