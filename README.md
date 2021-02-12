@@ -56,7 +56,7 @@ Counter                            Samples Minimum Average          Maximum
 
 ## Links
 
-For Exchange, you can see the following pages for the thresholds:
+For Exchange, you can see the following pages for the thresholds - right-click "Open on a new tab" to keep this Github tab open):
 
 - [Exchange 2013 (valid for Exchange 2016 and Exchange 2019 !) performance counters](https://docs.microsoft.com/en-us/exchange/exchange-2013-performance-counters-exchange-2013-help)
 
