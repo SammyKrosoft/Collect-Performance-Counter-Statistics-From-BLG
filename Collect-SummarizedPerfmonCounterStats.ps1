@@ -1,6 +1,26 @@
+<#
+.DESCRIPTION
+      This script analyses the counters we find with substrings (example: you are looking for Available Memory stats like Min, Avg, Max on a BLG,
+      but don't know the exact counter name, you'll use the -CounterFilter1 "Memory" -CounterFilter2 "Available" parameter to find all counters within
+      the BLG you specify that have these words in their path. On this example, it's "\\ServerName\Memory\Available MBytes" counter.
+
+.EXAMPLE
+      Collect-SummarizedPerfmonCounterStats.ps1 -ExchangeBLGDiagnosticsFolder "C:\temp\" -CounterFilter1 "I/O Database Reads (Attached) Average Latency" -CounterFilter2 "DB"
+Because we didn't specify the -BLGFileName, that Will analyze the oldest BLG file found on C:\temp\, and dump the Min, Avg, Max values for all the "I/O Database Reads (Attached)
+Average Latency" counters for all the databases with "DB" in their names.
+
+.NOTE
+      Common counter substrings to search for:
+        -CounterFilter1 "I/O Database Reads (Attached) Average Latency"
+        -CounterFilter1 "Memory" -CounterFilter2 "Available MBytes"
+        -CounterFilter1 "% processor time"
+        -CounterFilter1 "domain controllers" -CounterFilter2 "ldap" -CounterFilter3 "time"
+        
+#>
+
 [CmdletBinding()]
 Param([string]$BLGFileName,
-      [string]$CounterFilter1="I/O Database Reads (Attached) Average Latency",
+      [string]$CounterFilter1
       [string]$CounterFilter2,
       [string]$CounterFilter3,
       [string]$ExchangeBLGDiagnosticsFolder = "$($env:exchangeinstallpath)Logging\Diagnostics\DailyPerformanceLogs\"
