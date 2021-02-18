@@ -20,7 +20,7 @@ Average Latency" counters for all the databases with "DB" in their names.
 
 [CmdletBinding()]
 Param([string]$BLGFileName,
-      [string]$CounterFilter1
+      [string]$CounterFilter1,
       [string]$CounterFilter2,
       [string]$CounterFilter3,
       [string]$ExchangeBLGDiagnosticsFolder = "$($env:exchangeinstallpath)Logging\Diagnostics\DailyPerformanceLogs\"
