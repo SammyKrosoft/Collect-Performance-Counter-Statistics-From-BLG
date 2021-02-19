@@ -45,7 +45,7 @@ Write-Host "Counter Filter 3  :     $CounterFilter3" -ForegroundColor Yellow
 
 # If there is nothing on the CounterFilter parameters, we consider a wildcard, otherwise, we add wildcards to find counters with substrings <3
 If ([String]::IsNullOrEmpty($BLGFileName)){
-    $BLGFileName = (Get-ChildItem $BLGFolder | Sort-Object LastWriteTime | Select -First 1).Name
+    $BLGFileName = (Get-ChildItem -Path "$BLGFolder\*.blg" | Sort-Object LastWriteTime | Select -First 1).Name
     }
 If ([string]::IsNullOrEmpty($CounterFilter1)){$CounterFilter1 = "*"}else{$CounterFilter1 = "*" + $CounterFilter1 + "*"}
 If ([string]::IsNullOrEmpty($CounterFilter2)){$CounterFilter2 = "*"}else{$CounterFilter2 = "*" + $CounterFilter2 + "*"}
