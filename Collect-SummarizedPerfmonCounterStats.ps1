@@ -9,21 +9,23 @@
 Because we didn't specify the -BLGFileName, that Will analyze the oldest BLG file found on C:\temp\, and dump the Min, Avg, Max values for all the "I/O Database Reads (Attached)
 Average Latency" counters for all the databases with "DB" in their names.
 
-.NOTE
+.NOTES
       Common counter substrings to search for:
         -CounterFilter1 "I/O Database Reads (Attached) Average Latency"
         -CounterFilter1 "Memory" -CounterFilter2 "Available MBytes"
-        -CounterFilter1 "% processor time"
+        -CounterFilter1 "% processor time" -CounterFilter2 "Total"
         -CounterFilter1 "domain controllers" -CounterFilter2 "ldap" -CounterFilter3 "time"
         
 #>
 
 [CmdletBinding()]
-Param([string]$BLGFileName,
+Param([# Parameter help description
+[Parameter(Mandatory=$false)]
+[string]$BLGFileName,
       [string]$CounterFilter1
       [string]$CounterFilter2,
       [string]$CounterFilter3,
-      [string]$ExchangeBLGDiagnosticsFolder = "$($env:exchangeinstallpath)Logging\Diagnostics\DailyPerformanceLogs\"
+      [string]$BLGFolder = "$($env:exchangeinstallpath)Logging\Diagnostics\DailyPerformanceLogs\"
       )
 
 #Setting up global variables that we'll reuse
@@ -36,14 +38,14 @@ $StopWatch = [System.Diagnostics.Stopwatch]::StartNew()
 
 Write-Host "Current Parameters:" -ForegroundColor Green
 Write-host "BLG File          :     $BLGFileName" -ForegroundColor Yellow
-Write-Host "BLG folder path   :     $ExchangeBLGDiagnosticsFolder" -ForegroundColor Yellow
+Write-Host "BLG folder path   :     $BLGFolder" -ForegroundColor Yellow
 Write-Host "Counter Filter 1  :     $CounterFilter1" -ForegroundColor Yellow
 Write-Host "Counter Filter 2  :     $CounterFilter2" -ForegroundColor Yellow
 Write-Host "Counter Filter 3  :     $CounterFilter3" -ForegroundColor Yellow
 
 # If there is nothing on the CounterFilter parameters, we consider a wildcard, otherwise, we add wildcards to find counters with substrings <3
 If ([String]::IsNullOrEmpty($BLGFileName)){
-    $BLGFileName = (Get-ChildItem $ExchangeBLGDiagnosticsFolder | Sort-Object LastWriteTime | Select -First 1).Name
+    $BLGFileName = (Get-ChildItem $BLGFolder | Sort-Object LastWriteTime | Select -First 1).Name
     }
 If ([string]::IsNullOrEmpty($CounterFilter1)){$CounterFilter1 = "*"}else{$CounterFilter1 = "*" + $CounterFilter1 + "*"}
 If ([string]::IsNullOrEmpty($CounterFilter2)){$CounterFilter2 = "*"}else{$CounterFilter2 = "*" + $CounterFilter2 + "*"}
@@ -52,13 +54,13 @@ If ([string]::IsNullOrEmpty($CounterFilter3)){$CounterFilter3 = "*"}else{$Counte
 Write-Host "Processed filters:" -ForegroundColor Green
 Write-Host "BLG file (if nothing specified, takes the oldest):" -ForegroundColor Magenta
 Write-host "                        $BLGFileName"
-Write-Host "BLG Folder Path   :     $ExchangeBLGDiagnosticsFolder" -ForegroundColor Magenta
+Write-Host "BLG Folder Path   :     $BLGFolder" -ForegroundColor Magenta
 Write-Host "Counter Filter 1  :     $CounterFilter1" -ForegroundColor Magenta
 Write-Host "Counter Filter 2  :     $CounterFilter2" -ForegroundColor Magenta
 Write-Host "Counter Filter 3  :     $CounterFilter3" -ForegroundColor Magenta
 
 #Verifying if BLG file(s) exist - doesn't apply if no BLG specified, as took the oldest one
-$ExchangeBLGDiagnosticsFilesPath = "$ExchangeBLGDiagnosticsFolder\$BLGFileName"
+$ExchangeBLGDiagnosticsFilesPath = "$BLGFolder\$BLGFileName"
 If (!(Test-Path $ExchangeBLGDiagnosticsFilesPath)){Write-Host "File(s) $ExchangeBLGDiagnosticsFilesPath not found. Please specify valid BLG file" -ForegroundColor Red;exit;$StopWatch.Stop();$StopWatch.Elapsed.totalseconds | Out-Host}
 
 
