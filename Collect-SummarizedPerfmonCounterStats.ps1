@@ -33,21 +33,23 @@ $OutputFile = "$($env:USERPROFILE)\Documents\CountersSummary_$(Get-Date -Format 
 Write-host "Starting..." -ForegroundColor Green
 $StopWatch = [System.Diagnostics.Stopwatch]::StartNew()
 
+#region BLG folder check
 If (!(Test-Path $BLGFolder)){
       Write-Host "Folder $BLGFolder doesn't exist ... please run the script from an Exchange server which DailyPerformanceLogs folder is located in the Exchange Install path\Logging\Diagnostics folder, or specify an existing folder with .BLG files on it" -ForegroundColor Red
       $StopWatch.Stop();
       $StopWatch.Elapsed.totalseconds | Out-Host
       Exit
 }
+#endregion BLG folder check
 
+#region Set BLG File Name if blank, and display parameters
 If ([String]::IsNullOrEmpty($BLGFileName)){
       $BLGFileName = (Get-ChildItem -Path "$BLGFolder\*.blg" | Sort-Object LastWriteTime | Select -First 1).Name
       }
-
       Write-Host "Current Parameters" -ForegroundColor Yellow -BackgroundColor Blue
       Write-host "BLG File          :     $BLGFileName" -ForegroundColor Yellow
       Write-Host "BLG folder path   :     $BLGFolder" -ForegroundColor Yellow
-      Write-Host "User Parameter Set:     $($PSCmdlet.ParameterSetName)" -ForegroundColor Yellow
+      Write-Host "User Parameter Set:     $($PSCmdlet.ParameterSetName)" -ForegroundColor Magenta
 
 #region BLG file check
 #Verifying if BLG file(s) exist - doesn't apply if no BLG specified, as took the oldest one
@@ -58,7 +60,6 @@ If (!(Test-Path $BLGDiagnosticsFilesPath)){
       $StopWatch.Elapsed.totalseconds | Out-Host
       exit;
 }
-
 #endregion BLG file check
 
 If ($CountersFile){
