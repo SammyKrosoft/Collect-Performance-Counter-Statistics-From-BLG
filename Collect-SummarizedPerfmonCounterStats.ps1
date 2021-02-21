@@ -35,6 +35,8 @@ $StopWatch = [System.Diagnostics.Stopwatch]::StartNew()
 
 If (!(Test-Path $BLGFolder)){
       Write-Host "Folder $BLGFolder doesn't exist ... please run the script from an Exchange server which DailyPerformanceLogs folder is located in the Exchange Install path\Logging\Diagnostics folder, or specify an existing folder with .BLG files on it" -ForegroundColor Red
+      $StopWatch.Stop();
+      $StopWatch.Elapsed.totalseconds | Out-Host
       Exit
 }
 
@@ -42,10 +44,10 @@ If ([String]::IsNullOrEmpty($BLGFileName)){
       $BLGFileName = (Get-ChildItem -Path "$BLGFolder\*.blg" | Sort-Object LastWriteTime | Select -First 1).Name
       }
 
-      Write-Host "Current Parameters:" -ForegroundColor Green
+      Write-Host "Current Parameters" -ForegroundColor Yellow -BackgroundColor Blue
       Write-host "BLG File          :     $BLGFileName" -ForegroundColor Yellow
       Write-Host "BLG folder path   :     $BLGFolder" -ForegroundColor Yellow
-      Write-Host "User Parameter Set:     $($PSCmdlet.ParameterSetName)"
+      Write-Host "User Parameter Set:     $($PSCmdlet.ParameterSetName)" -ForegroundColor Yellow
 
 #region BLG file check
 #Verifying if BLG file(s) exist - doesn't apply if no BLG specified, as took the oldest one
@@ -88,8 +90,6 @@ Write-Host "Loading counters list from BLG file, please wait..." -ForegroundColo
 #$CounterList = @(Import-Counter -path "$BLGDiagnosticsFilesPath" -ListSet * | Foreach-Object {If ($_.CounterSetType -eq "SingleInstance"){$_.Paths} Else {$_.PathsWithInstances}})
 $CounterList = @(Import-Counter -path "$BLGDiagnosticsFilesPath" -ListSet * | Foreach-Object {If ($_.CounterSetType -eq "SingleInstance"){$_ | Select -ExpandProperty Paths} Else {$_ | Select -ExpandProperty PathsWithInstances}})
 
-#exit
-
 $Tick = $StopWatch.Elapsed.totalseconds
 Write-host "Took $Tick seconds to load all counters from $BLGFileName"
 Write-Host "Found $($CounterList.count) counter(s) !" -ForegroundColor DarkRed -BackgroundColor DarkBlue
@@ -119,8 +119,6 @@ Write-Host "List of counters filtered:"
 Foreach ($item in $CounterListFiltered){
       write-host $Item -ForegroundColor Green
 }
-
-#Exit
 
 #import counters this time not only the paths, but all the values as well, for filtered counters 
 $Data = Import-Counter -Path "$BLGDiagnosticsFilesPath" -Counter $CounterListFiltered -ErrorAction SilentlyContinue
