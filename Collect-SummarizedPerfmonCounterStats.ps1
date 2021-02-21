@@ -80,7 +80,7 @@ If ($CountersFile){
       } Else {
             $NbFilterStrings = $ArrayFilter.Count
             for ($i=0;$i -lt $NbFilterStrings;$i++) {
-                  Write-Host "Treating Index of ArrayFilter #$i aka $($ArrayFilter[$i])"
+                  Write-Host "Processing Index of ArrayFilter #$i - From $($ArrayFilter[$i]) to *$($ArrayFilter[$i])*" -ForegroundColor Green
                   $ArrayFilter[$i]="*" + $ArrayFilter[$i] + "*"
             }
       }
