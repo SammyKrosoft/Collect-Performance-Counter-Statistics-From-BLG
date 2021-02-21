@@ -1,13 +1,30 @@
 <#
+.SYNOPSIS
+      This script spits out a CSV file with the Min, Avg, Max of desired counters inside a BLG file.
+      Using -ArrayFilter "substring1","Substring2","substring3" enables to get counters even when we
+      don't remember the exact names of counters.
+
 .DESCRIPTION
       This script analyses the counters we find with substrings (example: you are looking for Available Memory stats like Min, Avg, Max on a BLG,
       but don't know the exact counter name, you'll use the -ArrayFilter parameter with an array of substrings like "Memory", "Available" to find 
       all counters within the BLG you specify that have these words in their path. On this example, it's "\\ServerName\Memory\Available MBytes" counter.
 
+
 .EXAMPLE
       Get-BLGSummarizedPerfmonCounterStats.ps1 -BLGFolder "C:\temp\" -ArrayFilter "I/O Database Reads (Attached) Average Latency", "DB"
-      Because we didn't specify the -BLGFileName, that Will analyze the oldest BLG file found on C:\temp\, and dump the Min, Avg, Max values for all the "I/O Database Reads (Attached)
+      Here we didn't specify the -BLGFileName, that Will analyze the oldest BLG file found on C:\temp\, and dump the Min, Avg, Max values for all the "I/O Database Reads (Attached)
       Average Latency" counters for all the databases with "DB" in their full counter path names.
+
+.EXAMPLE
+      .\Get-BLGSummarizedPerfmonCounterStats.ps1 -BLGFolder "c:\temp" -CountersFile .\counterslist.txt
+      Here we specified again the C:\temp folder to find the BLG oldest BLG file (as we didn't specify the -BLGFileName parameter), and we want to get
+      the summary of the counters stored in the counterslist.txt file located on the local directory where we execute the script from.
+
+.INPUTS
+      A BLG file containing Windows performance counters data
+
+.OUTPUTS
+      A CSV file with counters and their Min, Avg, Max values
 
 .NOTES
       Common counter substrings to search for:
