@@ -18,11 +18,11 @@
         
 #>
 
-[CmdletBinding()]
-Param([string]$BLGFileName,
-      [string[]]$ArrayFilter,
-      [string]$CountersFile, #Note: Haven't tested the -CountersFile feature yet
-      [string]$BLGFolder = "$($env:exchangeinstallpath)Logging\Diagnostics\DailyPerformanceLogs\"
+[CmdletBinding(DefaultParameterSetName="ParamArrayFilter")]
+Param([Parameter()][string]$BLGFileName,
+      [Parameter(ParameterSetName="ParamArrayFilter")][string[]]$ArrayFilter,
+      [Parameter(ParameterSetName="ParamFile")][string]$CountersFile, #Note: Haven't tested the -CountersFile feature yet
+      [Parameter()][string]$BLGFolder = "$($env:exchangeinstallpath)Logging\Diagnostics\DailyPerformanceLogs\"
       )
 
 #Setting up global variables that we'll reuse
@@ -45,6 +45,7 @@ If ([String]::IsNullOrEmpty($BLGFileName)){
       Write-Host "Current Parameters:" -ForegroundColor Green
       Write-host "BLG File          :     $BLGFileName" -ForegroundColor Yellow
       Write-Host "BLG folder path   :     $BLGFolder" -ForegroundColor Yellow
+      Write-Host "User Parameter Set:     $($PSCmdlet.ParameterSetName)"
 
 #region BLG file check
 #Verifying if BLG file(s) exist - doesn't apply if no BLG specified, as took the oldest one

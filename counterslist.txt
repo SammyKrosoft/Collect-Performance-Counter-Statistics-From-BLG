@@ -1,0 +1,4 @@
+\\JUPEX006\Processor Information(_Total)\% DPC Time      
+\\JUPEX006\Processor Information(_Total)\% Interrupt Time
+\\JUPEX006\Processor Information(_Total)\% Privileged Time
+\\JUPEX006\Processor Information(_Total)\% Processor Time
