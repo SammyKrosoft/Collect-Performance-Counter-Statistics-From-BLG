@@ -20,16 +20,16 @@ The output is a CSV file containing the counter full path, the number of samples
 ### Sample usage 1:
 
 ```powershell
-Get-BLGSummarizedPerfmonCounterStats.ps1 -CounterFilter1 "Memory" -CounterFilter2 "Available" -ExchangeBLGDiagnosticsFolder "c:\temp"
+Get-BLGSummarizedPerfmonCounterStats.ps1 -ArrayFilter "Memory", "Available" -BLGFolder "c:\temp"
 ```
-Since the ```-BLGFileName``` is not specified, but the ```-ExchangeBLGDiagnosticsFolder``` is specified as ```"C:\temp"```, this will get the **oldest BLG file** on the *C:\temp* folder to collect the statistics of the counters that have *"Memory"* and *"Available"* in their names, which I already know we have only *\Memory\Available MBytes* falling into this filter, hehe.
+Since the ```-BLGFileName``` is not specified, but the ```-BLGFolder``` is specified as ```"C:\temp"```, this will get the **oldest BLG file** on the *C:\temp* folder to collect the statistics of the counters that have *"Memory"* and *"Available"* in their names, which I already know we have only *\Memory\Available MBytes* falling into this filter, hehe.
 
 ### Sample usage 2:
 
 ```powershell
-.\Get-BLGSummarizedPerfmonCounterStats.ps1 -CounterFilter1 "Memory" -CounterFilter2 "Available" -ExchangeBLGDiagnosticsFolder "C:\temp" -BLGFileName *.blg
+.\Get-BLGSummarizedPerfmonCounterStats.ps1 -ArrayFilter "Memory", "Available" -BLGFolder "C:\temp" -BLGFileName "*.blg"
 ```
-Here we specified the ```-BLGFileName``` as ```*.blg``` as well as the ```-ExchangeBLGDiagnosticsFolder``` specified as ```"C:\temp"``` and this will get all the counters (```*.blg```) that have *"Memory"* and *"Available"* in their names, and that we copied on the ```c:\temp``` directory prior to running the script.
+Here we specified the ```-BLGFileName``` as ```*.blg``` as well as the ```-BLGFolder``` specified as ```"C:\temp"``` and this will get all the counters (```*.blg```) that have *"Memory"* and *"Available"* in their names, and that we copied on the ```c:\temp``` directory prior to running the script.
 
 ### Sample output:
 
