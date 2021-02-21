@@ -1,4 +1,4 @@
-# Collect-Performance-Counter-Statistics-From-BLG
+# Get-BLGSummarizedPerfmonCounterStats.ps1
 
 ## Intro
 This script gets the counters list from a BLG you specify.
@@ -20,14 +20,14 @@ The output is a CSV file containing the counter full path, the number of samples
 ### Sample usage 1:
 
 ```powershell
-Collect-SummarizedPerfmonCounterStats.ps1 -CounterFilter1 "Memory" -CounterFilter2 "Available" -ExchangeBLGDiagnosticsFolder "c:\temp"
+Get-BLGSummarizedPerfmonCounterStats.ps1 -CounterFilter1 "Memory" -CounterFilter2 "Available" -ExchangeBLGDiagnosticsFolder "c:\temp"
 ```
 Since the ```-BLGFileName``` is not specified, but the ```-ExchangeBLGDiagnosticsFolder``` is specified as ```"C:\temp"```, this will get the **oldest BLG file** on the *C:\temp* folder to collect the statistics of the counters that have *"Memory"* and *"Available"* in their names, which I already know we have only *\Memory\Available MBytes* falling into this filter, hehe.
 
 ### Sample usage 2:
 
 ```powershell
-.\Collect-SummarizedPerfmonCounterStats.ps1 -CounterFilter1 "Memory" -CounterFilter2 "Available" -ExchangeBLGDiagnosticsFolder "C:\temp" -BLGFileName *.blg
+.\Get-BLGSummarizedPerfmonCounterStats.ps1 -CounterFilter1 "Memory" -CounterFilter2 "Available" -ExchangeBLGDiagnosticsFolder "C:\temp" -BLGFileName *.blg
 ```
 Here we specified the ```-BLGFileName``` as ```*.blg``` as well as the ```-ExchangeBLGDiagnosticsFolder``` specified as ```"C:\temp"``` and this will get all the counters (```*.blg```) that have *"Memory"* and *"Available"* in their names, and that we copied on the ```c:\temp``` directory prior to running the script.
 
