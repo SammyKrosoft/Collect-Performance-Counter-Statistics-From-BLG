@@ -32,6 +32,9 @@
         -ArrayFilter "Memory", "Available MBytes"
         -ArrayFilter "% processor time", "Total"
         -ArrayFilter "domain controllers", "ldap", "time"
+
+.LINK
+      https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.diagnostics/import-counter?view=powershell-5.1
         
 #>
 
