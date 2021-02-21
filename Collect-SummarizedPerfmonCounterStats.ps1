@@ -1,27 +1,27 @@
 <#
 .DESCRIPTION
       This script analyses the counters we find with substrings (example: you are looking for Available Memory stats like Min, Avg, Max on a BLG,
-      but don't know the exact counter name, you'll use the -CounterFilter1 "Memory" -CounterFilter2 "Available" parameter to find all counters within
-      the BLG you specify that have these words in their path. On this example, it's "\\ServerName\Memory\Available MBytes" counter.
+      but don't know the exact counter name, you'll use the -ArrayFilter parameter with an array of substrings like "Memory", "Available" to find 
+      all counters within the BLG you specify that have these words in their path. On this example, it's "\\ServerName\Memory\Available MBytes" counter.
 
 .EXAMPLE
-      Collect-SummarizedPerfmonCounterStats.ps1 -ExchangeBLGDiagnosticsFolder "C:\temp\" -CounterFilter1 "I/O Database Reads (Attached) Average Latency" -CounterFilter2 "DB"
-Because we didn't specify the -BLGFileName, that Will analyze the oldest BLG file found on C:\temp\, and dump the Min, Avg, Max values for all the "I/O Database Reads (Attached)
-Average Latency" counters for all the databases with "DB" in their names.
+      Get-BLGSummarizedPerfmonCounterStats.ps1 -BLGFolder "C:\temp\" -ArrayFilter "I/O Database Reads (Attached) Average Latency", "DB"
+      Because we didn't specify the -BLGFileName, that Will analyze the oldest BLG file found on C:\temp\, and dump the Min, Avg, Max values for all the "I/O Database Reads (Attached)
+      Average Latency" counters for all the databases with "DB" in their full counter path names.
 
 .NOTES
       Common counter substrings to search for:
-        -CounterFilter1 "I/O Database Reads (Attached) Average Latency"
-        -CounterFilter1 "Memory" -CounterFilter2 "Available MBytes"
-        -CounterFilter1 "% processor time" -CounterFilter2 "Total"
-        -CounterFilter1 "domain controllers" -CounterFilter2 "ldap" -CounterFilter3 "time"
+        -ArrayFilter "I/O Database Reads (Attached) Average Latency"
+        -ArrayFilter "Memory", "Available MBytes"
+        -ArrayFilter "% processor time", "Total"
+        -ArrayFilter "domain controllers", "ldap", "time"
         
 #>
 
 [CmdletBinding()]
 Param([string]$BLGFileName,
       [string[]]$ArrayFilter,
-      [string]$CountersFile, #Note: this is for future use to enable passing list of counter path
+      [string]$CountersFile, #Note: Haven't tested the -CountersFile feature yet
       [string]$BLGFolder = "$($env:exchangeinstallpath)Logging\Diagnostics\DailyPerformanceLogs\"
       )
 
@@ -48,9 +48,9 @@ If ([String]::IsNullOrEmpty($BLGFileName)){
 
 #region BLG file check
 #Verifying if BLG file(s) exist - doesn't apply if no BLG specified, as took the oldest one
-$ExchangeBLGDiagnosticsFilesPath = "$BLGFolder\$BLGFileName"
-If (!(Test-Path $ExchangeBLGDiagnosticsFilesPath)){
-      Write-Host "File(s) $ExchangeBLGDiagnosticsFilesPath not found. Please specify valid BLG file" -ForegroundColor Red;
+$BLGDiagnosticsFilesPath = "$BLGFolder\$BLGFileName"
+If (!(Test-Path $BLGDiagnosticsFilesPath)){
+      Write-Host "File(s) $BLGDiagnosticsFilesPath not found. Please specify valid BLG file" -ForegroundColor Red;
       $StopWatch.Stop();
       $StopWatch.Elapsed.totalseconds | Out-Host
       exit;
@@ -84,8 +84,8 @@ If ($CountersFile){
 
 #Loading all counters present in the target BLG:
 Write-Host "Loading counters list from BLG file, please wait..." -ForegroundColor DarkRed
-#$CounterList = @(Import-Counter -path "$ExchangeBLGDiagnosticsFilesPath" -ListSet * | Foreach-Object {If ($_.CounterSetType -eq "SingleInstance"){$_.Paths} Else {$_.PathsWithInstances}})
-$CounterList = @(Import-Counter -path "$ExchangeBLGDiagnosticsFilesPath" -ListSet * | Foreach-Object {If ($_.CounterSetType -eq "SingleInstance"){$_ | Select -ExpandProperty Paths} Else {$_ | Select -ExpandProperty PathsWithInstances}})
+#$CounterList = @(Import-Counter -path "$BLGDiagnosticsFilesPath" -ListSet * | Foreach-Object {If ($_.CounterSetType -eq "SingleInstance"){$_.Paths} Else {$_.PathsWithInstances}})
+$CounterList = @(Import-Counter -path "$BLGDiagnosticsFilesPath" -ListSet * | Foreach-Object {If ($_.CounterSetType -eq "SingleInstance"){$_ | Select -ExpandProperty Paths} Else {$_ | Select -ExpandProperty PathsWithInstances}})
 
 #exit
 
@@ -122,7 +122,7 @@ Foreach ($item in $CounterListFiltered){
 #Exit
 
 #import counters this time not only the paths, but all the values as well, for filtered counters 
-$Data = Import-Counter -Path "$ExchangeBLGDiagnosticsFilesPath" -Counter $CounterListFiltered -ErrorAction SilentlyContinue
+$Data = Import-Counter -Path "$BLGDiagnosticsFilesPath" -Counter $CounterListFiltered -ErrorAction SilentlyContinue
 
 $AllResults = @()
 $Data | Select -ExpandProperty CounterSamples | Group-Object Path | Foreach {   $Stats = $_ | Select -ExpandProperty Group | Measure-Object -Average -Minimum -Maximum CookedValue
