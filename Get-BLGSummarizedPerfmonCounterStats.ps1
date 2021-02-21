@@ -1,3 +1,34 @@
+<#PSScriptInfo
+
+.VERSION 1.01
+
+.GUID f3261388-a3f9-4589-87fe-5384b5e9be6a
+
+.AUTHOR sammy
+
+.COMPANYNAME Microsoft Canada
+
+.COPYRIGHT None
+
+.TAGS 
+
+.LICENSEURI 
+
+.PROJECTURI https://github.com/SammyKrosoft/Collect-Performance-Counter-Statistics-From-BLG
+
+.ICONURI 
+
+.EXTERNALMODULEDEPENDENCIES 
+
+.REQUIREDSCRIPTS 
+
+.EXTERNALSCRIPTDEPENDENCIES 
+
+.RELEASENOTES
+      v1.01 : added script info for PSGallery publishing
+
+#>
+
 <#
 .SYNOPSIS
       This script spits out a CSV file with the Min, Avg, Max of desired counters inside a BLG file.
@@ -24,7 +55,7 @@
       A BLG file containing Windows performance counters data
 
 .OUTPUTS
-      A CSV file with counters and their Min, Avg, Max values
+      A CSV file with counters path and their Min, Avg, Max values
 
 .NOTES
       Common counter substrings to search for:
