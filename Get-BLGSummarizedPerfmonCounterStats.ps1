@@ -4,7 +4,7 @@
 
 .GUID f3261388-a3f9-4589-87fe-5384b5e9be6a
 
-.AUTHOR sammy
+.AUTHOR Sam Canada Drey
 
 .COMPANYNAME Microsoft Canada
 
@@ -14,7 +14,7 @@
 
 .LICENSEURI 
 
-.PROJECTURI https://github.com/SammyKrosoft/Collect-Performance-Counter-Statistics-From-BLG
+.PROJECTURI
 
 .ICONURI 
 
@@ -25,7 +25,6 @@
 .EXTERNALSCRIPTDEPENDENCIES 
 
 .RELEASENOTES
-      v1.01 : added script info for PSGallery publishing
 
 #>
 
@@ -64,9 +63,11 @@
         -ArrayFilter "% processor time", "Total"
         -ArrayFilter "domain controllers", "ldap", "time"
 
+        v1.01 : added script info for PSGallery publishing
+
 .LINK
       https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.diagnostics/import-counter?view=powershell-5.1
-        
+      https://github.com/SammyKrosoft/Collect-Performance-Counter-Statistics-From-BLG
 #>
 
 [CmdletBinding(DefaultParameterSetName="ParamArrayFilter")]
