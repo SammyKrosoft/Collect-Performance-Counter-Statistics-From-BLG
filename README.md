@@ -1,5 +1,8 @@
 # Get-BLGPerfmonSummarizedCounterStats.ps1
 
+## Note
+```Check-PerfCountersThresholds.ps1``` is in progress and not functional for now. Objective of this script is to highlight when Min/Avg/Max reach error thresholds.
+
 ## Intro
 This script gets the counters list from a BLG you specify.
 If ```-BLGFileName``` is not specified, it will look for an Exchange DailyPerformanceDiagnostics folder :
