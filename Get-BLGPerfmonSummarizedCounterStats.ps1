@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 1.1
+.VERSION 1.2
 
 .GUID f3261388-a3f9-4589-87fe-5384b5e9be6a
 
@@ -72,6 +72,7 @@
 
 [CmdletBinding(DefaultParameterSetName="ParamArrayFilter")]
 Param([Parameter()][string]$BLGFileName,
+      [Parameter()][switch]$ExportCounterDataToCSV,
       [Parameter(ParameterSetName="ParamArrayFilter")][string[]]$ArrayFilter,
       [Parameter(ParameterSetName="ParamFile")][string]$CountersFile, #Note: Haven't tested the -CountersFile feature yet
       [Parameter()][string]$BLGFolder = "$($env:exchangeinstallpath)Logging\Diagnostics\DailyPerformanceLogs\"
@@ -176,15 +177,19 @@ Foreach ($item in $CounterListFiltered){
 #import counters this time not only the paths, but all the values as well, for filtered counters 
 $Data = Import-Counter -Path "$BLGDiagnosticsFilesPath" -Counter $CounterListFiltered -ErrorAction SilentlyContinue
 
+if ($ExportCounterDataToCSV){
+      $Data | Export-CSV -NoTypeInformation -Path "$($env:USERPROFILE)\Documents\ExportedCounterFullData_$(Get-Date -Format yyyMMdd_hhmmss).csv"
+}
+
 $AllResults = @()
 $Data | Select -ExpandProperty CounterSamples | Group-Object Path | Foreach {   $Stats = $_ | Select -ExpandProperty Group | Measure-Object -Average -Minimum -Maximum CookedValue
                                                                                 $AllResults += [PSCustomObject]@{
-                                                                                Counter=$_.Name
-                                                                                Instance = $_.Group.InstanceName[0]
-                                                                                Minimum=$Stats.Minimum
-                                                                                Average=$Stats.Average
-                                                                                Maximum=$Stats.Maximum
-                                                                                Samples=$Stats.Count
+                                                                                          Counter=$_.Name
+                                                                                          Instance = $_.Group.InstanceName[0]
+                                                                                          Minimum=$Stats.Minimum
+                                                                                          Average=$Stats.Average
+                                                                                          Maximum=$Stats.Maximum
+                                                                                          Samples=$Stats.Count
                                                                                                                   }                                                                                        
                                                                             }
 $StopWatch.Stop()
