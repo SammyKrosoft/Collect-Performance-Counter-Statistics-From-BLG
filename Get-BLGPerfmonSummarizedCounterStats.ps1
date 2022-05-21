@@ -75,6 +75,7 @@ Param([Parameter()][string]$BLGFileName,
       [Parameter()][switch]$ExportCounterDataToCSV,
       [Parameter(ParameterSetName="ParamArrayFilter")][string[]]$ArrayFilter,
       [Parameter(ParameterSetName="ParamFile")][string]$CountersFile, #Note: Haven't tested the -CountersFile feature yet
+      [Parameter()][switch]$ListCountersOnly,
       [Parameter()][string]$BLGFolder = "$($env:exchangeinstallpath)Logging\Diagnostics\DailyPerformanceLogs\"
       )
 
@@ -149,14 +150,14 @@ Write-host "Took $Tick seconds to load all counters from $BLGFileName"
 Write-Host "Found $($CounterList.count) counter(s) !" -ForegroundColor DarkRed -BackgroundColor DarkBlue
 Write-Host "Counters path loaded ! Filtering these as per ArrayFilter or Counters from file..." -ForegroundColor DarkRed
 
-$CounterListFiltered = $CounterList
+$CounterListFiltered = @()
 
 If ($CountersFile){
       $CounterListFiltered = $CountersListFromFile
 }ElseIf (!($ArrayFilter -eq "*")){
       Foreach ($Item in $ArrayFilter){
             Write-Host "Filtering with $Item" -ForegroundColor Yellow
-            $CounterListFiltered = $CounterListFiltered | ? {$_ -like $Item}
+            $CounterListFiltered += $CounterList | ? {$_ -like $Item}
       }
 }Else{
       Write-Host "-ArrayFilter is unspecified, using ArrayFilter = $ArrayFilter"
@@ -172,6 +173,13 @@ If ($NumberOfCountersFromBLG -eq 0){
 Write-Host "List of counters filtered:"
 Foreach ($item in $CounterListFiltered){
       write-host $Item -ForegroundColor Green
+}
+
+If ($ListCountersOnly){
+      Write-Host "Used -ListCountersOnly switch - exiting now then..." -ForegroundColor Green -BackgroundColor Black
+      $StopWatch.Stop();
+      $StopWatch.Elapsed.totalseconds | Out-Host
+      exit
 }
 
 #import counters this time not only the paths, but all the values as well, for filtered counters 
