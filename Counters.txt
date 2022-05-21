@@ -1,0 +1,2 @@
+\Memory\Available MBytes
+\Processor(*)\% Processor Time
